@@ -85,7 +85,7 @@
 		z-index: 2;
 	}
 
-	.player .song-list .avatar img {
+	.player .current-song .avatar img {
 		width: 150px;
 		height: 150px;
 	}
