@@ -22,12 +22,14 @@
 			audioElement.pause();
 		} else {
 			playerState = "play";
+			audioElement.play();
 		}
 	}
 
 	function next() {
 		currSongIndex = (currSongIndex + 1) % $musicList.length
 		playerState = "play";
+		setBackground();
 	}
 
 	function setSong(i) {
@@ -37,9 +39,9 @@
 	}
 
 	function setBackground() {
-		let bg = `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.5)),
-		url(./files/image/${musicList[currSongIndex].image} center no-repeat)`;
-		mainElement.style.background = bg;
+		let background = `linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.5)),
+		url(./files/image/${$musicList[currSongIndex].image}) center no-repeat`;
+		mainElement.style.background = background;
 		mainElement.style.backgroundSize = "cover";
 	}
 
@@ -64,41 +66,39 @@
 		left: 50%;
 		transform: translate(-50%, -50%);
 		width: 350px;
-		height: 430px;
+		height: 530px;
 		display: flex;
-		flex-direction: column;
+		overflow: hidden;
 	}
-
 	.player .song-list {
 		height: calc(100% - 120px);
 		background: rgba(255,255,255, 0.2);
 		box-shadow: 0px 8px 32px rgba(32, 38, 135, 0.2);
-		border: 1px solid rgba(255, 255, 0.4);
-		overflow-y: auto;
+		overflow-y: scroll;
 	}
-
 	.player .current-song {
-		height: 120px;
 		padding: 10px;
 		display: flex;
+		flex-direction: column;
 		background: rgba(255, 255, 255, 0.8);
 		z-index: 2;
 	}
-
-	.player .song-list .avatar img {
-		width: 150px;
-		height: 150px;
+	.player .current-song .avatar img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
 	}
-
 	.player .song-list > div .avatar {
 		width: 50px;
 		height: 50px;
 		text-align: center;
 		padding: 10px;
 	}
+	.player .song-list > div.active {
+		display: flex;
+		background: rgba(255, 255, 255, 0.8);
+	}
 	.player .song-list > div .avatar img {
-		/* width: 100%;
-		height: 100%; */
 		max-width: 150px;
 		max-height: 150px;
 		border-radius: 50%;
@@ -112,13 +112,33 @@
 	.player .song-list > div .song-details h2 {
 		font-size: 18px;
 		margin: 0px 0px 2px;
-		color: #fff;
+		color: #111;
 	}
 	.player .song-list > div .song-details p {
-		color: #eee;
+		color: #111;
 		font-size: 15px;
 		margin: 0px;
 	}
+	.player .song-list::-webkit-scrollbar {
+		width: 4px;
+		background: transparent;
+	}
+	.player .song-list::-webkit-scrollbar-thumb {
+		width: 4px;
+		background: #fff;
+	}
+	.player .song-controls .controls {
+		display: flex;
+		justify-content: space-between;
+	}
+	.player .song-controls .controls button{
+		outline: none;
+		border: none;
+		background: transparent;
+		color: #111;
+		cursor: pointer;
+	}
+
 </style>
 <main bind:this={mainElement}>
 <audio
@@ -127,16 +147,14 @@ bind:this={audioElement}
 autoplay="false"
 >
 </audio>
-<i class="fa fa-pause"></i>
-<i class="fa fa-pause"></i>
-<i class="fa fa-pause"></i>
+
 <div class="player">
 	<div class="current-song">
 		<div class="avatar">
-		<img alt="{$musicList[currSongIndex].image}" src={"./files/image/" + $musicList[currSongIndex].image}>
+		<img class="avatar-img" alt="{$musicList[currSongIndex].image}" src={"./files/image/" + $musicList[currSongIndex].image}>
 		</div>
 		<div class="song-controls">
-			<h2>{$musicList[currSongIndex].image}</h2>
+			<h2>{$musicList[currSongIndex].name}</h2>
 			<div class="controls">
 				<button on:click={prev}>
 					<i class="fa fa-backward"></i>
